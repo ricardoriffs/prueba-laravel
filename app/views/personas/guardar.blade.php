@@ -57,17 +57,19 @@
                 @endforeach
             @endif           
         </div>
-        <div>
-             {{ Form::label('fotos', 'Foto:') }}<br/>
-            {{ Form::file('fotos') }}
-            @if($errors->has('fotos'))
-                @foreach($errors->get('fotos') as $error)
-                    <br/>* {{ $error }}
-                @endforeach
-            @endif                               
-        </div> 
+        @if($persona)        
+            <div>
+                 {{ Form::label('fotos', 'Fotos:') }}<br/>
+                {{ Form::file('fotos[]', array('multiple' => true)) }}
+                @if($errors->has('fotos'))
+                    @foreach($errors->get('fotos') as $error)
+                        <br/>* {{ $error }}
+                    @endforeach
+                @endif                               
+            </div> 
+        @endif
         <div>        
-            <img src="{{asset('fotos/')}}/{{ $persona ? $persona->fotos : ' ' }}" height="150" width="100" />            
+            <!--<img src="{{asset('fotos/')}}/{{ $persona ? $persona->fotos : ' ' }}" height="150" width="100" />-->            
         </div>
         <br/>
         <div>
@@ -76,11 +78,3 @@
         {{ Form::close() }}
     @stop            
     </div>
-        <!--echo Form::password('password');
-
-Generating Other Inputs
-
-echo Form::email($name, $value = null, $attributes = array());
-echo Form::file($name, $attributes = array());-->
-
-    

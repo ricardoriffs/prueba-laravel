@@ -1,5 +1,10 @@
 <?php
 
+/*Carga los archivos .env*/
+
+Dotenv::load(base_path());
+
+Dotenv::required(array('DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'));
 /*
 |--------------------------------------------------------------------------
 | Register The Laravel Class Loader

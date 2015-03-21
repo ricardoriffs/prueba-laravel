@@ -13,6 +13,6 @@
     <p>Fecha de Cumpleaños:{{ $persona->fecha_cumple }}</p>    
     <p>Foto:</p>
         <div>
-                <img src="{{asset('fotos/')}}/{{$persona->fotos}}" height="150" width="100">            
+                <!--<img src="{{asset('fotos/')}}/{{$persona->fotos}}" height="150" width="100">-->            
         </div>    
 @stop

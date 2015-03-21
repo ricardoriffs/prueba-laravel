@@ -39,7 +39,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => 'America/Bogota',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return array(
 	|
 	*/
 
-	'key' => 'QDJ8M3lLpYjhL7qxIvDnzexnJZHhCZGg',
+	'key' => getenv('APP_KEY'),
 
 	/*
 	|--------------------------------------------------------------------------

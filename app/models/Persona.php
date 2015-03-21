@@ -19,8 +19,7 @@ class Persona extends Eloquent {
             'nombre' => array('required', 'min:5', 'alpha'), 
             'apellido' => array('min:5', 'alpha'),
             'telefono' => array('required', 'numeric', 'min:1000'),
-            'fecha_cumple' => array('date_format:Y-m-d'),
-            'fotos' => array('image', 'max:5000')
+            'fecha_cumple' => array('date_format:Y-m-d')
         );
 
         $validador = Validator::make($entradas, $reglas);
@@ -51,7 +50,6 @@ class Persona extends Eloquent {
             'apellido' => array('min:5', 'alpha'),
             'telefono' => array('required', 'numeric', 'min:1000'),
             'fecha_cumple' => array('date_format:Y-m-d'),
-            'fotos' => array('image', 'max:5000')
         );
 
         $validador = Validator::make($entradas, $reglas);
@@ -70,4 +68,30 @@ class Persona extends Eloquent {
 
         return $resultado;         
     }    
+    
+    public static function modificarArchivos($files){
+        
+        foreach($files as $file):
+            
+            $resultado = array();
+
+            $reglas = array(
+                'fotos' => array('image', 'mimes:png,gif,jpeg', 'max:2000')            
+            );
+            
+            $validador = Validator::make(array('fotos'=> $file), $reglas);
+            
+            if($validador->fails()):
+                $resultado['mensaje'] = $validador;
+                $resultado['error']   = true;
+                return $resultado;
+                break;
+            else:
+                $resultado['mensaje'] = 'La persona ha sido modificada correctamente.';
+                $resultado['error']   = false;                
+            endif;
+        endforeach;
+        
+        return $resultado;          
+    }
 }

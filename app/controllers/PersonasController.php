@@ -54,25 +54,23 @@ class PersonasController extends BaseController{
     public function ActualizarPersona($id){
         
         $persona = $this->buscarPersona($id);  
-     
+        
        if(Input::get() and $persona){
-           
+           $files = Input::file('fotos');
+                   
            $resultado = Persona::modificarPersona(Input::all());
+           $resultado_fotos = Persona::modificarArchivos($files);           
            
            if($resultado['error'] == false){
-                $file = Input::file('fotos');                
-                $persona->nombre = Input::get('nombre');
-                $persona->apellido = Input::get('apellido');
-                $persona->telefono = Input::get('telefono');
-                $persona->fecha_cumple = Input::get('fecha_cumple');
-                $persona->fotos = Input::file('fotos')->getClientOriginalName();
-                
-                if($persona->save()){
-                    $file->move("fotos",$file->getClientOriginalName());                    
-                    return Redirect::to('personas')->with('mensaje', $resultado['mensaje']);         
-                }                
+                if($resultado_fotos['error'] == false){
+                    if($this->guardarPersona($persona, $files)):
+                       return Redirect::to('personas')->with('mensaje', $resultado['mensaje']);                        
+                    endif;
+                } else {
+                    return Redirect::to("personas/editar/$id")->withErrors($resultado_fotos['mensaje'])->withInput();                    
+                }
            } else {
-               return Redirect::to("personas/editar/$id")->withErrors($resultado['mensaje'] )->withInput();
+               return Redirect::to("personas/editar/$id")->withErrors($resultado['mensaje'])->withInput();
            }
        } else {
             return View::make('personas.guardar', array('persona' => $persona));
@@ -99,5 +97,29 @@ class PersonasController extends BaseController{
              
         $busqueda = Persona::find($id);
         return $busqueda;
+    }
+    
+    private function guardarPersona($persona, $files){
+   
+        $fotos = ' ';        
+        $persona->nombre = Input::get('nombre');
+        $persona->apellido = Input::get('apellido');
+        $persona->telefono = Input::get('telefono');
+        $persona->fecha_cumple = Input::get('fecha_cumple');
+        foreach($files as $file):
+            $fotos .= $file->getClientOriginalName();
+        endforeach;
+        $persona->fotos = $fotos;
+
+        if($persona->save()):
+            $path = public_path().'/fotos';
+            foreach ($files as $file):
+                $file->move($path,$file->getClientOriginalName());                                     
+            endforeach;     
+
+            return true;               
+        else:
+            return false;
+        endif;         
     }
 }

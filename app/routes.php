@@ -11,33 +11,15 @@
 |
 */
 
-Route::get('login', function(){
-    return View::make('login');
-});
+Route::get('login', array('uses' => 'UsuariosController@login'));
 
-Route::post('registro', function(){
+Route::post('registro', array('uses' => 'UsuariosController@registrarUsuario'));
 
-    $input = Input::all();
-
-    $input['password'] = Hash::make($input['password']);
-
-    Usuarios::create($input);
-
-    return Redirect::to('login')->with('mensaje_registro', 'Usuario Registrado exitosamente');
-});
-
-Route::post('login', function(){
-
-    if (Auth::attempt( array('correo' => Input::get('correo'), 'password' => Input::get('password') ), true )){
-        //return Redirect::to('inicio');
-        return Redirect::intended('personas');
-    }else{
-        return Redirect::to('login')->with('mensaje_login', 'Datos de acceso inválidos, pruebe nuevamente');
-    }
-});
+Route::post('login', array('uses' => 'UsuariosController@autenticacion'));
 
 Route::group(array('before' => 'auth'), function()
 {
+    Route::get('/', array('uses' => 'PersonasController@mostrarPersonas'));        
     
     Route::get('personas', array('uses' => 'PersonasController@mostrarPersonas'));
 
